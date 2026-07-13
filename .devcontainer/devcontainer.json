@@ -1,14 +1,12 @@
 {
   // GitHub Codespaces で開いたときの環境定義。
-  // Codespaces 既定の汎用イメージ + docker-in-docker feature とし、
+  // 必要なのは Docker だけなので軽量な base イメージ + docker-in-docker feature とし、
   // 実際の acms/MySQL は postStartCommand の docker compose で起動する。
-  "name": "acms-ona",
-  "image": "mcr.microsoft.com/devcontainers/universal:4.0.1-noble",
+  "name": "acms-codespaces",
+  "image": "mcr.microsoft.com/devcontainers/base:noble",
   "features": {
-    // Codespace 内で docker / docker compose を使えるようにする。
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "moby": false
-    }
+    // Codespace 内で docker / docker compose を使えるようにする（既定の Moby を使用）。
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   // Codespace の起動・再開のたびに acms + MySQL を起動する（-d でバックグラウンド）。
   // up は冪等なので、再開時に二重起動にはならない。
