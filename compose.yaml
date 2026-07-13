@@ -8,10 +8,16 @@ services:
     # コンテナ内は Apache が 80 で待ち受ける。ホスト側 8080 に公開する。
     ports:
       - "8080:80"
-    # Codespaces(HTTPS リバースプロキシ)配下で Host に付く内部ポートを除去し、
-    # a-blog cms が正しい絶対URLを生成できるようにする（ローカルには影響しない）。
+    # GitHub Codespaces 配下では、公開ドメインが CODESPACE_NAME と
+    # GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN から決まる。これらを渡し、
+    # codespaces-fix.php（auto_prepend_file）で a-blog cms に正しいホスト/HTTPS を
+    # 強制する。ローカルでは未設定＝空なので矯正は無効。
+    environment:
+      CODESPACE_NAME: ${CODESPACE_NAME:-}
+      GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: ${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-}
     volumes:
-      - ./codespaces-apache.conf:/etc/apache2/conf-enabled/zz-codespaces.conf:ro
+      - ./codespaces-fix.php:/usr/local/etc/codespaces-fix.php:ro
+      - ./codespaces-php.ini:/usr/local/etc/php/conf.d/zz-codespaces.ini:ro
     depends_on:
       db:
         condition: service_healthy

@@ -82,7 +82,8 @@ ACMS_IMAGE_TAG=3.2-php8.5 docker compose up
 | ファイル | 役割 |
 | --- | --- |
 | `compose.yaml` | `appleple/acms`（Apache + PHP 同梱）と `mysql:8.0` を定義。acms はホスト側 `8080` に公開。 |
-| `.devcontainer/devcontainer.json` | Codespaces の環境定義。汎用イメージ + docker-in-docker feature。`postStartCommand` で `docker compose up -d` を自動実行。 |
+| `.devcontainer/devcontainer.json` | Codespaces の環境定義。base イメージ + docker-in-docker feature。`postStartCommand` で `docker compose up -d` を自動実行。 |
+| `codespaces-fix.php` / `codespaces-php.ini` | Codespaces 配下で a-blog cms に正しい公開ホスト/HTTPS を強制する補正（`auto_prepend_file`）。ローカルでは無効。 |
 
 ---
 
