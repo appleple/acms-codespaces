@@ -1,17 +1,21 @@
 {
-  // Ona（旧 Gitpod）で開いたときの環境定義。
-  // 汎用イメージ + docker-in-docker feature とし、実際の acms/MySQL の起動は
-  // .ona/automations.yaml のサービスで docker compose を使って行う（方式 A）。
+  // GitHub Codespaces で開いたときの環境定義。
+  // Codespaces 既定の汎用イメージ + docker-in-docker feature とし、
+  // 実際の acms/MySQL は postStartCommand の docker compose で起動する。
   "name": "acms-ona",
   "image": "mcr.microsoft.com/devcontainers/universal:4.0.1-noble",
   "features": {
-    // 環境内で docker / docker compose を使えるようにする。
+    // Codespace 内で docker / docker compose を使えるようにする。
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "moby": false
     }
   },
-  // エディタ内プレビュー用のポート転送（自分専用）。
-  // 他者への公開は Ona の port sharing（.ona/automations.yaml の open-ports タスク）で行う。
+  // Codespace の起動・再開のたびに acms + MySQL を起動する（-d でバックグラウンド）。
+  // up は冪等なので、再開時に二重起動にはならない。
+  "postStartCommand": "docker compose up -d",
+  // 8080 を自動転送し、起動時にプレビューを開く。
+  // 他者へ公開したい場合は、起動後に Ports パネルで 8080 の可視性を Public に変更する
+  // （または gh CLI: gh codespace ports visibility 8080:public -c <codespace-name>）。
   "forwardPorts": [8080],
   "portsAttributes": {
     "8080": {

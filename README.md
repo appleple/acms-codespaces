@@ -1,20 +1,23 @@
 # acms-ona
 
-[![Build with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/appleple/acms-ona)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/appleple/acms-ona)
 
-**a-blog cms をボタン 1 クリックで試せる [Ona](https://ona.com/)（旧 Gitpod）用テンプレート**です。
+**a-blog cms をボタン 1 クリックで試せる [GitHub Codespaces](https://github.com/features/codespaces) 用テンプレート**です。
 
-上の «Build with Ona» ボタンを押すと、クラウド上に開発環境が立ち上がり、[appleple/acms](https://hub.docker.com/r/appleple/acms) コンテナと MySQL が自動起動します。あとはブラウザで **a-blog cms のセットアップウィザード**を進めるだけで、インストールを体験できます。
+上の «Open in GitHub Codespaces» ボタンを押すと、クラウド上に開発環境が立ち上がり、[appleple/acms](https://hub.docker.com/r/appleple/acms) コンテナと MySQL が自動起動します。あとはブラウザで **a-blog cms のセットアップウィザード**を進めるだけで、インストールを体験できます。
+
+> 💳 **クレジットカード不要で試せます。** GitHub の個人アカウントには毎月の無料枠（Free プランで 120 core-hours ≒ 2コアで約60時間 / 15GB ストレージ）があり、支払い方法を登録しなくても利用できます。無料枠を使い切っても、カード未登録なら課金されずに停止するだけです（既定の spending limit は $0）。
 
 > ⚠️ **開発・評価用途限定です。** このイメージ（`appleple/acms`）はローカル開発・自動テスト・評価向けで、本番運用向けにハードニング／サポートされていません。a-blog cms は appleple Inc. の商用ソフトウェアです。試用の範囲を超える場合はライセンスが必要になることがあります。詳細は [a-blog cms 公式サイト](https://www.a-blogcms.jp/) を参照してください。
 
 ---
 
-## 使い方（Ona 上で試す）
+## 使い方（GitHub Codespaces で試す）
 
-1. 上部の **[![Build with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/appleple/acms-ona)** ボタンを押す。
-2. 環境が起動すると、自動的に `appleple/acms` と MySQL が `docker compose` で立ち上がります（初回はイメージ取得のため数分かかることがあります）。
-3. Ona の **Ports** パネル、またはプレビューから **8080** 番ポートを開く。
+1. 上部の **[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/appleple/acms-ona)** ボタンを押す（GitHub アカウントが必要です）。
+2. Codespace が起動すると、自動的に `appleple/acms` と MySQL が `docker compose` で立ち上がります（初回はイメージ取得のため数分かかることがあります）。
+3. 下部の **PORTS（ポート）** タブで **8080** 番の «Open in Browser» を開く。
+   起動直後は自動でプレビューが開きます。
 4. a-blog cms の**セットアップウィザード**が表示されます。以下の順で進めます。
    1. **利用規約に同意**
    2. **データベース情報を入力**（下表の値）
@@ -37,15 +40,23 @@
 
 初期データやサンプルコンテンツの自動投入は行いません。まっさらな状態からインストールを体験できます。
 
+### 起動した画面を他の人にも見せたい場合
+
+Codespaces のポートは既定で **本人のみ（Private）** です。URL を知っている人なら誰でもアクセスできる状態にするには、**PORTS タブで 8080 を右クリック → Port Visibility → Public** に変更してください（`gh codespace ports visibility 8080:public -c <codespace-name>` でも可）。
+
+> 組織（appleple）のポリシーでポートの Public 化が制限されている場合があります。その場合は本人プレビューのみ利用できます。
+
 ---
 
 ## ローカル（自分の PC）で試す
 
-Docker / Docker Compose があれば、Ona を使わずにローカルでも同じ環境を起動できます。
+Docker / Docker Compose があれば、Codespaces を使わずにローカルでも同じ環境を起動できます（GitHub アカウント不要・完全無料）。
 
 ```bash
+git clone https://github.com/appleple/acms-ona.git
+cd acms-ona
 docker compose up
-# 別ターミナルで、または起動後にブラウザで:
+# ブラウザで開く:
 open http://localhost:8080   # 上記と同じセットアップウィザードが表示される
 ```
 
@@ -71,18 +82,7 @@ ACMS_IMAGE_TAG=3.2-php8.5 docker compose up
 | ファイル | 役割 |
 | --- | --- |
 | `compose.yaml` | `appleple/acms`（Apache + PHP 同梱）と `mysql:8.0` を定義。acms はホスト側 `8080` に公開。 |
-| `.devcontainer/devcontainer.json` | Ona の環境（Dev Container）定義。汎用イメージ + docker-in-docker feature。 |
-| `.ona/automations.yaml` | 環境起動時に `docker compose up` するサービスと、8080 番ポートを公開するタスク。 |
-
-### ポートの公開範囲について
-
-`.ona/automations.yaml` の `open-ports` タスクは、既定で 8080 番ポートを **`everyone`（未認証で誰でもアクセス可）** として公開します。起動したインスタンスの URL を知っていれば誰でもインストーラーにアクセスできる状態になります。公開範囲を変えたい場合は、同ファイル内の `--admission` を次のいずれかに変更してください。
-
-- `creator_only` … 環境を起動した本人のみ
-- `organization` … 組織メンバーのみ
-- `everyone` … 未認証で誰でも（既定）
-
-> 組織のポリシーによっては、指定できる最大の公開範囲が制限される場合があります（その場合はダッシュボード上で調整してください）。
+| `.devcontainer/devcontainer.json` | Codespaces の環境定義。汎用イメージ + docker-in-docker feature。`postStartCommand` で `docker compose up -d` を自動実行。 |
 
 ---
 
@@ -90,4 +90,4 @@ ACMS_IMAGE_TAG=3.2-php8.5 docker compose up
 
 - a-blog cms 公式: https://www.a-blogcms.jp/
 - Docker イメージ: https://hub.docker.com/r/appleple/acms
-- Ona ドキュメント: https://ona.com/docs/
+- GitHub Codespaces: https://github.com/features/codespaces

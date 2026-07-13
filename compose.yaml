@@ -5,8 +5,7 @@ services:
   acms:
     # 再現性のためバージョン固定タグを既定にしつつ、ACMS_IMAGE_TAG で上書き可能にしている。
     image: appleple/acms:${ACMS_IMAGE_TAG:-3.2-php8.4}
-    # コンテナ内は Apache が 80 で待ち受ける。ホスト側 8080 に公開する
-    # （Ona の port sharing は 1024-65535 のみ許可のため 80 直公開は不可）。
+    # コンテナ内は Apache が 80 で待ち受ける。ホスト側 8080 に公開する。
     ports:
       - "8080:80"
     depends_on:
