@@ -8,3 +8,6 @@
 # ローカルの上書き用（コミットしない）
 compose.override.yaml
 .env
+
+# 起動時に展開される a-blog cms 本体（商用ソフトのため未コミット・使い捨て）
+/acms/

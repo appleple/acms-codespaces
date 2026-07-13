@@ -8,6 +8,8 @@
     // Codespace 内で docker / docker compose を使えるようにする（既定の Moby を使用）。
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
+  // 初回作成時に a-blog cms のファイル一式を ./acms へ展開する（編集可能にするため）。
+  "postCreateCommand": "bash .devcontainer/setup.sh",
   // Codespace の起動・再開のたびに acms + MySQL を起動する（-d でバックグラウンド）。
   // up は冪等なので、再開時に二重起動にはならない。
   "postStartCommand": "docker compose up -d",
