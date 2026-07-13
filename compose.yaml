@@ -1,0 +1,29 @@
+# a-blog cms (appleple/acms) + MySQL をまとめて起動する開発・評価用の Compose 定義。
+# インストール済み状態やサンプルデータは投入しない。
+# 起動後、ブラウザで 8080 番ポートを開くと a-blog cms のセットアップウィザードが表示される。
+services:
+  acms:
+    # 再現性のためバージョン固定タグを既定にしつつ、ACMS_IMAGE_TAG で上書き可能にしている。
+    image: appleple/acms:${ACMS_IMAGE_TAG:-3.2-php8.4}
+    # コンテナ内は Apache が 80 で待ち受ける。ホスト側 8080 に公開する
+    # （Ona の port sharing は 1024-65535 のみ許可のため 80 直公開は不可）。
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    # DB 接続情報はウィザードで手入力する想定（プリセットはしない）。
+    # ここではウィザードに入力する空の DB と認証情報だけ用意する。
+    environment:
+      MYSQL_DATABASE: acms
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped

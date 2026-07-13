@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# エディタ
+.idea/
+*.swp
+
+# ローカルの上書き用（コミットしない）
+compose.override.yaml
+.env

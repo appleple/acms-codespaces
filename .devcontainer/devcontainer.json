@@ -1,0 +1,22 @@
+{
+  // Ona（旧 Gitpod）で開いたときの環境定義。
+  // 汎用イメージ + docker-in-docker feature とし、実際の acms/MySQL の起動は
+  // .ona/automations.yaml のサービスで docker compose を使って行う（方式 A）。
+  "name": "acms-ona",
+  "image": "mcr.microsoft.com/devcontainers/universal:4.0.1-noble",
+  "features": {
+    // 環境内で docker / docker compose を使えるようにする。
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+  // エディタ内プレビュー用のポート転送（自分専用）。
+  // 他者への公開は Ona の port sharing（.ona/automations.yaml の open-ports タスク）で行う。
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "a-blog cms",
+      "onAutoForward": "openPreview"
+    }
+  }
+}

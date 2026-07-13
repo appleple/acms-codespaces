@@ -1,0 +1,39 @@
+# Ona（旧 Gitpod）の Tasks & Services 定義。
+# `ona automations update .ona/automations.yaml` で反映される。
+# 環境の起動・再開のたびに acms + MySQL を docker compose で立ち上げる。
+services:
+  acms:
+    name: a-blog cms + MySQL
+    description: appleple/acms と MySQL を docker compose で起動し、セットアップウィザードを公開する
+    triggeredBy:
+      - postDevcontainerStart
+      - postEnvironmentStart
+    # 初回は appleple/acms・mysql のイメージ pull が走るため、準備完了待ちを長めに取る。
+    readinessTimeout: 600s
+    commands:
+      # サービスの start はフォアグラウンドで動き続ける必要があるため -d は使わない。
+      start: docker compose up
+      # インストーラー（/ -> /setup/ にリダイレクト）が 200 を返すまで繰り返し確認する。
+      ready: curl -sfL http://localhost:8080/ -o /dev/null
+      # 明示的な停止コマンド。未指定だと start プロセスに SIGTERM が送られる。
+      stop: docker compose down
+
+tasks:
+  open-ports:
+    name: Open a-blog cms port
+    description: 8080 番ポートを公開して、ブラウザからインストーラーにアクセスできるようにする
+    triggeredBy:
+      - postEnvironmentStart
+      - manual
+    command: |
+      # インストーラーが応答するまで待機してからポートを公開する。
+      until curl -sfL http://localhost:8080/ -o /dev/null; do sleep 2; done
+      # 誰でも（未認証で）アクセスできるように everyone で公開する。
+      # 自分だけに限定したい場合は --admission creator_only、
+      # 組織メンバーに限定したい場合は --admission organization に変更する。
+      # CLI 名は環境により ona / gitpod のどちらかになるためフォールバックする。
+      if command -v ona >/dev/null 2>&1; then
+        ona environment port open 8080 --name "a-blog cms" --admission everyone
+      else
+        gitpod environment port open 8080 --name "a-blog cms" --admission everyone
+      fi
