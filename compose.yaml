@@ -8,6 +8,10 @@ services:
     # コンテナ内は Apache が 80 で待ち受ける。ホスト側 8080 に公開する。
     ports:
       - "8080:80"
+    # Codespaces(HTTPS リバースプロキシ)配下で Host に付く内部ポートを除去し、
+    # a-blog cms が正しい絶対URLを生成できるようにする（ローカルには影響しない）。
+    volumes:
+      - ./codespaces-apache.conf:/etc/apache2/conf-enabled/zz-codespaces.conf:ro
     depends_on:
       db:
         condition: service_healthy
