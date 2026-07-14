@@ -9,9 +9,9 @@ cd "$(dirname "$0")/.."
 
 TAG="${ACMS_IMAGE_TAG:-3.2-php8.4}"
 IMAGE="appleple/acms:${TAG}"
-MARKER="acms/.acms-seeded"
 
-if [ -f "${MARKER}" ]; then
+# index.php の有無で判定（空マウントで作られただけの ./acms も「未展開」とみなして展開する）
+if [ -f acms/index.php ]; then
   echo "[setup] ./acms は展開済み。スキップします。"
   exit 0
 fi
@@ -28,9 +28,12 @@ cid="$(docker create "${IMAGE}")"
 docker cp "${cid}:/var/www/html/." ./acms/
 docker rm "${cid}" >/dev/null
 
-echo "[setup] 権限を調整（エディタと Apache の双方が読み書きできるように）..."
-# 体験用途のため広めに許可（./acms は .gitignore 済み・使い捨て環境）
-chmod -R a+rwX acms 2>/dev/null || sudo chmod -R a+rwX acms 2>/dev/null || true
+# 権限調整: docker cp したファイルは root 所有になることがあり、ホスト側 chmod が
+# 効かない場合がある。root で動くコンテナ内から chmod して、エディタと Apache
+# (www-data) の双方が読み書きできるようにする（体験用途のため広めに許可）。
+echo "[setup] 権限を調整..."
+docker run --rm --entrypoint sh -v "$(pwd)/acms:/data" "${IMAGE}" -c 'chmod -R a+rwX /data' \
+  || chmod -R a+rwX acms 2>/dev/null \
+  || sudo chmod -R a+rwX acms 2>/dev/null || true
 
-touch "${MARKER}"
 echo "[setup] 完了。エディタの ./acms 配下で a-blog cms を編集できます。"
