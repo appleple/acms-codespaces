@@ -69,9 +69,9 @@ Codespace の作成時に、a-blog cms 本体一式が**ワークスペースの
 
 ---
 
-## 勉強会・ペア作業で 1 つの環境を共同編集する（Live Share）
+## 複数人で 1 つの環境を共同編集する（Live Share）
 
-勉強会やペア作業などで、**1 つの Codespace を複数人でリアルタイム共同編集**できます（この repo には Live Share 拡張を同梱済み）。
+**1 つの Codespace を複数人でリアルタイムに共同編集**できます（この repo には Live Share 拡張を同梱済み）。
 
 1. ホスト（あなた）が Codespace を起動する。
 2. コマンドパレット（F1）→ **「Live Share: Copy Collaboration Link」** で**共有リンク**を取得（読み取り専用にしたいときは read-only リンクを選ぶ）。
