@@ -8,6 +8,13 @@
     // Codespace 内で docker / docker compose を使えるようにする（既定の Moby を使用）。
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
+  "customizations": {
+    "vscode": {
+      // 勉強会などで 1 つの環境を複数人でリアルタイム共同編集するための Live Share を同梱。
+      // ホストがセッションを開始し、共有リンクからお客さんが参加できる。
+      "extensions": ["ms-vsliveshare.vsliveshare"]
+    }
+  },
   // 初回作成時に a-blog cms のファイル一式を ./web へ展開する（編集可能にするため）。
   "postCreateCommand": "bash .devcontainer/setup.sh",
   // Codespace の起動・再開のたびに acms + MySQL を起動する（-d でバックグラウンド）。
