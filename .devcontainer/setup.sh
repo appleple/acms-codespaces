@@ -32,18 +32,24 @@ docker rm "${cid}" >/dev/null
 # Codespaces ではホスト側の操作が効かない場合があるため確実性を優先）:
 #   1) htaccess.txt を同じ場所の .htaccess にリネーム
 #      （a-blog cms が要求。ルート = URL 書き換え、各サブディレクトリ = 直接アクセス防止）
-#   2) 権限調整（エディタ=作成ユーザー と Apache=www-data の双方が読み書きできるように）
-echo "[setup] htaccess.txt を .htaccess にリネーム & 権限調整..."
-docker run --rm --entrypoint sh -v "$(pwd)/web:/data" "${IMAGE}" -c '
+#   2) DB 接続情報の初期値を setup/lib/db_default.php に配置（インストーラーに初期入力される）
+#   3) 権限調整（エディタ=作成ユーザー と Apache=www-data の双方が読み書きできるように）
+echo "[setup] htaccess リネーム / DB初期値の配置 / 権限調整..."
+docker run --rm --entrypoint sh \
+  -v "$(pwd)/web:/data" \
+  -v "$(pwd)/.devcontainer/db_default.php:/db_default.php:ro" \
+  "${IMAGE}" -c '
   find /data -name htaccess.txt -type f | while IFS= read -r f; do
     mv -f "$f" "${f%htaccess.txt}.htaccess"
   done
+  cp -f /db_default.php /data/setup/lib/db_default.php
   chmod -R a+rwX /data
 ' || {
   # フォールバック（ホスト側で実施）
   find web -name htaccess.txt -type f 2>/dev/null | while IFS= read -r f; do
     mv -f "$f" "${f%htaccess.txt}.htaccess" 2>/dev/null || true
   done
+  cp -f .devcontainer/db_default.php web/setup/lib/db_default.php 2>/dev/null || true
   chmod -R a+rwX web 2>/dev/null || sudo chmod -R a+rwX web 2>/dev/null || true
 }
 

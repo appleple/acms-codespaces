@@ -26,7 +26,9 @@
    4. **管理者アカウントを作成**
    5. **インストール** を実行
 
-### ウィザードに入力する DB 接続情報
+### ウィザードの DB 接続情報（初期入力済み）
+
+以下の値は **インストーラーの DB 入力欄に初期入力済み**です（`setup/lib/db_default.php` に設定）。通常は**そのまま進めるだけ**でOKです。
 
 | 項目 | 値 |
 | --- | --- |
@@ -119,7 +121,8 @@ ACMS_IMAGE_TAG=3.2-php8.5 docker compose up
 | --- | --- |
 | `compose.yaml` | `appleple/acms`（Apache + PHP 同梱）と `mysql:8.0` を定義。acms はホスト側 `8080` に公開し、`web/` を docroot にマウント。 |
 | `.devcontainer/devcontainer.json` | Codespaces の環境定義。base イメージ + docker-in-docker feature。`postCreateCommand` で本体展開、`postStartCommand` で `docker compose up -d`。 |
-| `.devcontainer/setup.sh` | 初回に a-blog cms 本体をイメージから `web/` へ展開し、`htaccess.txt` を `.htaccess` にリネームする。 |
+| `.devcontainer/setup.sh` | 初回に a-blog cms 本体をイメージから `web/` へ展開し、`htaccess.txt` を `.htaccess` にリネーム、DB 初期値を配置する。 |
+| `.devcontainer/db_default.php` | インストーラーの DB 入力欄の初期値。展開時に `web/setup/lib/db_default.php` へ配置される。 |
 | `web/` | 展開された a-blog cms 本体（＝ドキュメントルート・編集対象）。`.gitignore` 済み・使い捨て。 |
 | `codespaces-fix.php` / `codespaces-php.ini` | Codespaces 配下で a-blog cms に正しい公開ホスト/HTTPS を強制する補正（`auto_prepend_file`）。ローカルでは無効。 |
 
