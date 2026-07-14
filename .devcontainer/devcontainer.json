@@ -12,7 +12,12 @@
     "vscode": {
       // 勉強会などで 1 つの環境を複数人でリアルタイム共同編集するための Live Share を同梱。
       // ホストがセッションを開始し、共有リンクからお客さんが参加できる。
-      "extensions": ["ms-vsliveshare.vsliveshare"]
+      "extensions": ["ms-vsliveshare.vsliveshare"],
+      "settings": {
+        // ブラウザからのゲスト参加を安定させるため relay 接続を既定にする
+        // （direct 接続はブラウザ非対応で「Direct connection not supported」になりやすい）。
+        "liveshare.connectionMode": "relay"
+      }
     }
   },
   // 初回作成時に a-blog cms のファイル一式を ./web へ展開する（編集可能にするため）。
