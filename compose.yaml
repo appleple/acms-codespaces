@@ -16,9 +16,10 @@ services:
       CODESPACE_NAME: ${CODESPACE_NAME:-}
       GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: ${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-}
     volumes:
-      # a-blog cms 本体をワークスペースにマウントし、エディタで直接編集できるようにする。
-      # ./acms は .devcontainer/setup.sh が初回にイメージから展開する（.gitignore 済み）。
-      - ./acms:/var/www/html
+      # a-blog cms 本体（ドキュメントルート）をワークスペースにマウントし、エディタで
+      # 直接編集できるようにする。./web は .devcontainer/setup.sh が初回にイメージから
+      # 展開する（htaccess.txt の .htaccess リネームも実施。.gitignore 済み）。
+      - ./web:/var/www/html
       - ./codespaces-fix.php:/usr/local/etc/codespaces-fix.php:ro
       - ./codespaces-php.ini:/usr/local/etc/php/conf.d/zz-codespaces.ini:ro
     depends_on:

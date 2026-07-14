@@ -8,19 +8,21 @@
     // Codespace 内で docker / docker compose を使えるようにする（既定の Moby を使用）。
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  // 初回作成時に a-blog cms のファイル一式を ./acms へ展開する（編集可能にするため）。
+  // 初回作成時に a-blog cms のファイル一式を ./web へ展開する（編集可能にするため）。
   "postCreateCommand": "bash .devcontainer/setup.sh",
   // Codespace の起動・再開のたびに acms + MySQL を起動する（-d でバックグラウンド）。
   // up は冪等なので、再開時に二重起動にはならない。
   "postStartCommand": "docker compose up -d",
-  // 8080 を自動転送し、起動時にプレビューを開く。
+  // 8080 を自動転送する。起動時は「外部ブラウザ」で開く（openBrowser）。
+  // VS Code 内蔵の Simple Browser(openPreview) は private ポートの GitHub 認証を
+  // 通せず表示できないため、実ブラウザで開く。
   // 他者へ公開したい場合は、起動後に Ports パネルで 8080 の可視性を Public に変更する
   // （または gh CLI: gh codespace ports visibility 8080:public -c <codespace-name>）。
   "forwardPorts": [8080],
   "portsAttributes": {
     "8080": {
       "label": "a-blog cms",
-      "onAutoForward": "openPreview"
+      "onAutoForward": "openBrowser"
     }
   }
 }
