@@ -1,6 +1,7 @@
 # acms-codespaces
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/appleple/acms-codespaces)
+[![Use this template](https://img.shields.io/badge/Use%20this%20template-2ea44f?style=flat&logo=github&logoColor=white)](https://github.com/appleple/acms-codespaces/generate)
 
 **a-blog cms をボタン 1 クリックで試せる [GitHub Codespaces](https://github.com/features/codespaces) 用テンプレート**です。
 
@@ -54,6 +55,15 @@ Codespace の作成時に、a-blog cms 本体一式が**ワークスペースの
 - 例: `web/themes/` に自分のテーマを追加してウィザードで選択、`web/extension/plugins/` に独自プラグインを配置、など。
 - 展開時に a-blog cms 標準の `htaccess.txt` は自動で `.htaccess` にリネーム済みです（ルートの URL 書き換え、各サブディレクトリの直接アクセス防止）。
 - `web/` は使い捨て・**Git 管理外**（`.gitignore` 済み。a-blog cms は商用ソフトのため本体はコミットしません）。Codespace を削除すると消えます。残したい成果物は別途エクスポート／コミットしてください。
+
+---
+
+## 自分のリポジトリとして使う（設定変更を残したい場合）
+
+このリポジトリは **テンプレート** です。設定（`compose.yaml` / `.devcontainer` / `README` など）を自分用に変更して残したい場合は、上部の **«Use this template»** ボタンから**自分のアカウントにコピー**を作成し、そこで Codespace を開いてください。以降の commit は自分のリポジトリに保存されます。
+
+- 単にお試しするだけなら «Open in GitHub Codespaces» でOK（使い捨ての Codespace が立ち上がります）。書き込み権限が無いリポジトリで push しようとすると、GitHub が自動で自分のアカウントへの Fork 作成を促します。
+- ⚠️ 注意: `web/`（a-blog cms 本体）は `.gitignore` 済みのため、コピー後も commit されません。テーマ/プラグインなど**自作分を版管理したい**場合は、`.gitignore` の除外設定が別途必要です。
 
 ---
 
